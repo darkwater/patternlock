@@ -1,0 +1,19 @@
+[package]
+name    = "priv-panel"
+version = "0.1.0"
+authors = ["Sam Lakerveld <darkwater124@gmail.com>"]
+
+# [dependencies]
+# time     = "0.1.36"
+# gtk      = { git = "https://github.com/gtk-rs/gtk.git",  features = [ "v3_20" ] }
+# cairo-rs = { git = "https://github.com/gtk-rs/cairo.git" }
+
+[dependencies]
+time = "0.1.36"
+gdk = "0.5.1"
+gdk-sys = "0.3.2"
+cairo-rs = "0.1.1"
+
+[dependencies.gtk]
+version = "0.1.1"
+features = [ "v3_20" ]
