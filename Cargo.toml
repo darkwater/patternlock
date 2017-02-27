@@ -1,19 +1,26 @@
 [package]
-name    = "priv-panel"
+name    = "patternlock"
 version = "0.1.0"
 authors = ["Sam Lakerveld <darkwater124@gmail.com>"]
 
-# [dependencies]
-# time     = "0.1.36"
-# gtk      = { git = "https://github.com/gtk-rs/gtk.git",  features = [ "v3_20" ] }
-# cairo-rs = { git = "https://github.com/gtk-rs/cairo.git" }
-
 [dependencies]
-time = "0.1.36"
-gdk = "0.5.1"
-gdk-sys = "0.3.2"
-cairo-rs = "0.1.1"
+time       = "0.1.36"
+image      = { git = "https://github.com/PistonDevelopers/image" }
+screenshot = { git = "file:///home/dark/downloads/screenshot-rs" }
+gtk        = { git = "https://github.com/gtk-rs/gtk.git", features = [ "v3_20" ] }
+gdk        = { git = "https://github.com/gtk-rs/gdk.git", features = [ "v3_20" ] }
+gtk-sys    = { git = "https://github.com/gtk-rs/sys.git", features = [ "v3_20" ] }
+gdk-sys    = { git = "https://github.com/gtk-rs/sys.git", features = [ "v3_20" ] }
+gdk-pixbuf = { git = "https://github.com/gtk-rs/gdk-pixbuf.git" }
+cairo-rs   = { git = "https://github.com/gtk-rs/cairo.git" }
 
-[dependencies.gtk]
-version = "0.1.1"
-features = [ "v3_20" ]
+# [dependencies]
+# time = "0.1.36"
+# gdk = "0.5.1"
+# gdk-sys = "0.3.2"
+# gdk-pixbuf = "0.1.1"
+# cairo-rs = "0.1.1"
+
+# [dependencies.gtk]
+# version = "0.1.1"
+# features = [ "v3_20" ]
