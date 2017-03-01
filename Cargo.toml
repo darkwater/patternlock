@@ -4,15 +4,18 @@ version = "0.1.0"
 authors = ["Sam Lakerveld <darkwater124@gmail.com>"]
 
 [dependencies]
-time       = "0.1.36"
-image      = { git = "https://github.com/PistonDevelopers/image" }
-screenshot = { git = "file:///home/dark/downloads/screenshot-rs" }
-gtk        = { git = "https://github.com/gtk-rs/gtk.git", features = [ "v3_20" ] }
-gdk        = { git = "https://github.com/gtk-rs/gdk.git", features = [ "v3_20" ] }
-gtk-sys    = { git = "https://github.com/gtk-rs/sys.git", features = [ "v3_20" ] }
-gdk-sys    = { git = "https://github.com/gtk-rs/sys.git", features = [ "v3_20" ] }
-gdk-pixbuf = { git = "https://github.com/gtk-rs/gdk-pixbuf.git" }
-cairo-rs   = { git = "https://github.com/gtk-rs/cairo.git" }
+time           = "0.1.36"
+image          = { git = "https://github.com/PistonDevelopers/image" }
+screenshot     = { git = "https://github.com/darkwater/screenshot-rs" }
+gtk            = { git = "https://github.com/gtk-rs/gtk.git", features = [ "v3_20" ] }
+gdk            = { git = "https://github.com/gtk-rs/gdk.git", features = [ "v3_20" ] }
+gtk-sys        = { git = "https://github.com/gtk-rs/sys.git", features = [ "v3_20" ] }
+gdk-sys        = { git = "https://github.com/gtk-rs/sys.git", features = [ "v3_20" ] }
+gdk-pixbuf     = { git = "https://github.com/gtk-rs/gdk-pixbuf.git" }
+cairo-rs       = { git = "https://github.com/gtk-rs/cairo.git" }
+epoxy          = { git = "https://github.com/mjkoo/epoxy-rs.git" }
+gl             = "^0.1"
+shared_library = "^0.1"
 
 # [dependencies]
 # time = "0.1.36"
