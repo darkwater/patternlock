@@ -12,7 +12,7 @@ extern crate shared_library;
 use gtk::prelude::*;
 use screenshot::get_screenshot;
 use self::gl::types::*;
-use std::cell::RefCell;
+use std::cell::{RefCell, Cell};
 use std::f64::consts::PI;
 use std::ffi::CStr;
 use std::mem;
@@ -258,7 +258,10 @@ fn main() {
     });
     gl::load_with(epoxy::get_proc_addr);
 
-    glarea.connect_realize(clone!(glarea => move |_| {
+    let mut time_loc: Cell<GLint> = Cell::new(0);
+    let mut program: Cell<GLuint> = Cell::new(0);
+
+    glarea.connect_realize(clone!(glarea, time_loc, program => move |_| {
         glarea.make_current();
 
         let vertices: [GLfloat; 24] = [
@@ -287,117 +290,21 @@ fn main() {
             in vec2 v_tex_coords;
             out vec4 color;
 
+            uniform float time;
             uniform sampler2D tex;
 
             void main() {
-                vec2 pixelSize      = vec2(10.0, 10.0) / vec2(1920.0 * 3.0, 1080.0);
-                vec2 modul          = mod(v_tex_coords, pixelSize) - vec2(0.0, pixelSize.y);
-                vec2 normalizedCord = vec2(v_tex_coords - modul);
-                vec4 color_         = texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.0, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.1, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.2, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.3, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.4, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.5, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.6, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.7, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.8, 0.9)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.0)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.1)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.2)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.3)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.4)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.5)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.6)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.7)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.8)) * 0.01;
-                     color_        += texture(tex, normalizedCord + pixelSize * vec2(0.9, 0.9)) * 0.01;
+                vec4 pixel = texture(tex, v_tex_coords);
+                float t = min(time / 2, 1.0);
+                float tween = 1 - pow(-t + 1, 4.0);
 
-                float luminance = dot(color_.rgb, vec3(0.3, 0.59, 0.11));
+                float luminance = dot(pixel.rgb, vec3(0.3, 0.59, 0.11));
                 float new_lum = (1 - pow(1 - luminance, 3)) * 0.4;
+                vec3 tint = vec3(0.21, 0.27, 0.35);
 
-                color = vec4(vec3(new_lum) * vec3(0.9, 1.0, 1.1), 1.0);
+                vec4 lock_pixel = vec4(mix(vec3(new_lum), tint, 0.2), 1.0);
+
+                color = mix(pixel, lock_pixel, tween);
             }
         "#;
 
@@ -409,10 +316,11 @@ fn main() {
             Ok(v) => v,
             Err(e) => { panic!("Error compiling fragment shader: {}", e) },
         };
-        let program = match link_program(vert_shader, frag_shader) {
+        program.set(match link_program(vert_shader, frag_shader) {
             Ok(v) => v,
             Err(e) => { panic!("Error linking shader: {}", e) },
-        };
+        });
+        let program = program.get();
 
         let mut vao: GLuint = 0;
         let mut vbo: GLuint = 0;
@@ -430,6 +338,7 @@ fn main() {
                            epoxy::STATIC_DRAW);
 
             gl::GenVertexArrays(1, &mut tex);
+            gl::ActiveTexture(epoxy::TEXTURE0);
             gl::BindTexture(epoxy::TEXTURE_2D, tex);
             gl::TexImage2D(epoxy::TEXTURE_2D, 0, epoxy::RGB as GLint, screenshot.width() as GLint, screenshot.height() as GLint,
                            0, epoxy::BGRA, epoxy::UNSIGNED_BYTE, screenshot.get_data().as_ptr() as *const GLvoid);
@@ -453,19 +362,28 @@ fn main() {
             gl::VertexAttribPointer(tex_attr as GLuint, 2, epoxy::FLOAT, epoxy::FALSE as GLboolean,
                                     (4 * mem::size_of::<GLfloat>()) as GLint,
                                     (2 * mem::size_of::<GLfloat>()) as *const GLvoid);
+
+            time_loc.set(gl::GetUniformLocation(program, b"time\0".as_ptr() as *const GLchar));
         }
     }));
 
-    glarea.connect_render(|_, _| {
+    let start_time = std::time::Instant::now();
+    glarea.connect_render(clone!(glarea, time_loc, program => move |_, _| {
+        let t = start_time.elapsed().as_secs() as f32 + start_time.elapsed().subsec_nanos() as f32 / 1000000000.0;
+        let time_loc = time_loc.get();
+
         unsafe {
+            gl::Uniform1f(time_loc, t);
+
             gl::ClearColor(0.11, 0.12, 0.13, 1.0);
             gl::Clear(epoxy::COLOR_BUFFER_BIT);
 
             gl::DrawArrays(epoxy::TRIANGLES, 0, 6);
         };
 
+        glarea.queue_draw();
         Inhibit(false)
-    });
+    }));
 
     // Image
     let image_buffer = gdk_pixbuf::Pixbuf::new_from_file_at_scale("kuroko.png", -1, monitor.height * 2 / 3, true).unwrap();
