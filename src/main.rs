@@ -16,6 +16,7 @@ use std::cell::{RefCell, Cell};
 use std::f64::consts::PI;
 use std::ffi::CStr;
 use std::mem;
+use std::process::Command;
 use std::ptr;
 use std::rc::Rc;
 
@@ -279,6 +280,7 @@ fn main() {
             in vec2 tex_coords;
             out vec2 v_tex_coords;
 
+
             void main() {
                 v_tex_coords = tex_coords;
                 gl_Position = vec4(position, 0.0, 1.0);
@@ -397,6 +399,13 @@ fn main() {
     window.add(&container);
     window.show_all();
 
+    let mut xset = Command::new("/usr/bin/xset")
+                           .args(&[ "s", "10", "10" ])
+                           .spawn()
+                           .expect("failed to execute xset");
+
+    let _ = xset.wait();
+
     // Grab input
     let gdk_window = window.get_window().unwrap();
     let display = screen.get_display();
@@ -417,12 +426,23 @@ fn main() {
 
     // Get ready to start
     window.connect_delete_event(|_, _| {
-        gtk::main_quit();
+        finish();
 
         Inhibit(false)
     });
 
     gtk::main();
+}
+
+fn finish() {
+    gtk::main_quit();
+
+    let mut xset = Command::new("/usr/bin/xset")
+                           .args(&[ "s", "600", "600" ])
+                           .spawn()
+                           .expect("failed to execute xset");
+
+    let _ = xset.wait();
 }
 
 fn handle_button_press(state: &RefCell<PatternData>, widget: &gtk::DrawingArea, event: &gdk::EventButton) -> gtk::Inhibit {
@@ -463,7 +483,7 @@ fn handle_button_release(state: &RefCell<PatternData>, widget: &gtk::DrawingArea
     widget.queue_draw();
 
     if state.current_input == [2, 4, 5, 6, 0, 0, 0, 0, 0] {
-        gtk::main_quit();
+        finish();
     }
 
     Inhibit(false)
